@@ -10,8 +10,8 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   var cards = [
-    PasswordInfo(1, 'Discord (Main)', 'T2ThatGuy', 'test@gmail.com',
-        'password12345', 'discord', 'https://www.discord.com/')
+    PasswordInfo(1, 'Discord (Main)', 'T2ThatGuy', 'test@gmail.com', 'discord',
+        'https://www.discord.com/')
   ];
 
   @override
@@ -82,7 +82,7 @@ class _DashboardState extends State<Dashboard> {
 
   void addNewCard() {
     cards.add(PasswordInfo(1, 'Discord (Main)', 'T2ThatGuy', 'test@gmail.com',
-        'password12345', 'discord', 'https://www.discord.com/'));
+        'discord', 'https://www.discord.com/'));
 
     setState(() {});
   }
