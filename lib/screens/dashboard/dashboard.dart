@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../screens/new_password/new_password_form.dart';
-import 'passwordInfo.dart';
+import '../new_password/new_password_form.dart';
+import '../../database/database_interface.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -9,10 +9,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  var cards = [
-    PasswordInfo(1, 'Discord (Main)', 'T2ThatGuy', 'test@gmail.com', 'discord',
-        'https://www.discord.com/')
-  ];
+  final _databaseInterface = getDatabaseRef();
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +21,7 @@ class _DashboardState extends State<Dashboard> {
           IconButton(
               icon: Icon(Icons.logout),
               onPressed: () {
-                Navigator.pop(context);
+                logout(context);
               }),
         ],
       ),
@@ -33,21 +30,17 @@ class _DashboardState extends State<Dashboard> {
           Expanded(
             flex: 3,
             child: ListView.builder(
-              itemCount: cards.length,
+              itemCount: _databaseInterface.cards.length,
               itemBuilder: (context, index) => cardListTile(
-                  cards[index].passwordName, cards[index].application),
+                  _databaseInterface.cards[index].passwordName,
+                  _databaseInterface.cards[index].application),
             ),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute<void>(
-                builder: (BuildContext context) => NewPasswordDialog(),
-                fullscreenDialog: true),
-          );
+          createNewPassword(context);
         },
         child: Icon(Icons.add),
       ),
@@ -80,10 +73,23 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  void addNewCard() {
-    cards.add(PasswordInfo(1, 'Discord (Main)', 'T2ThatGuy', 'test@gmail.com',
-        'discord', 'https://www.discord.com/'));
+  void logout(BuildContext context) {
+    _databaseInterface.userInfo.logOut();
+    Navigator.pop(context);
+  }
 
-    setState(() {});
+  void createNewPassword(BuildContext context) async {
+    // Returns the PasswordInfo Class
+    final information = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (BuildContext context) => NewPasswordDialog(),
+          fullscreenDialog: true),
+    );
+
+    if (information != null) {
+      _databaseInterface.createNewPassword(information);
+      setState(() {});
+    }
   }
 }

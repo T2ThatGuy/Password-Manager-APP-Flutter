@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:password_manager_app/screens/dashboard/passwordInfo.dart';
+import 'package:password_manager_app/models/passwordInfo.dart';
 
 class NewPasswordDialog extends StatefulWidget {
   @override
@@ -25,10 +25,6 @@ class _NewPasswordDialogState extends State<NewPasswordDialog> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Create a Password'),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: createPassword,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,6 +103,14 @@ class _NewPasswordDialogState extends State<NewPasswordDialog> {
               },
             ),
           ),
+          Center(
+            child: ElevatedButton(
+              child: Text('CONFIRM'),
+              onPressed: () {
+                createPassword(context);
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -136,13 +140,10 @@ class _NewPasswordDialogState extends State<NewPasswordDialog> {
     );
   }
 
-  void createPassword() {
-    final passwordInfo = new PasswordInfo(2, passwordNameCon.text,
+  void createPassword(BuildContext context) {
+    final passwordInfo = new PasswordInfo(passwordNameCon.text,
         usernameCon.text, emailCon.text, applicationCon.text, urlCon.text);
 
-    passwordInfo.generatePassword(
-        letters, numbers, symbols, passwordLength.toInt());
-
-    print('Hello World');
+    Navigator.pop(context, passwordInfo);
   }
 }

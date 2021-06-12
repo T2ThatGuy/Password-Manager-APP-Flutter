@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
+import '../../database/database_interface.dart';
+
 class LogIn extends StatefulWidget {
   @override
   _LogInState createState() => _LogInState();
 }
 
 class _LogInState extends State<LogIn> {
+  final _databaseInterface = getDatabaseRef();
+
   var username;
   var password;
 
@@ -68,20 +72,17 @@ class _LogInState extends State<LogIn> {
     );
   }
 
-  void performLogIn() {
+  void performLogIn() async {
     username = usernameField.text;
     password = passwordField.text;
 
-    if (username == 'T2ThatGuy') {
-      if (password == '12345') {
-        print('Loged In');
-        clearInputs();
-        Navigator.pushNamed(context, '/dashboard');
-      } else {
-        print('Password Inorrect');
-      }
+    var response = await _databaseInterface.login(username, password);
+
+    if (response == true) {
+      clearInputs();
+      Navigator.pushNamed(context, '/dashboard');
     } else {
-      print('Username not correct');
+      print('Something went wrong!');
     }
   }
 

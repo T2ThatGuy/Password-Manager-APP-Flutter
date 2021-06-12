@@ -1,6 +1,6 @@
 name: password_manager_app
 description: A new Flutter project.
-publish_to: 'none' 
+publish_to: 'none'
 version: 1.0.0+1
 
 environment:
@@ -9,9 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
   cupertino_icons: ^1.0.2
   google_fonts: ^2.1.0
+  http: ^0.13.3
 
 dev_dependencies:
   flutter_test:
