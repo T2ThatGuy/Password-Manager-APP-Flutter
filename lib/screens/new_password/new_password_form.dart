@@ -142,8 +142,10 @@ class _NewPasswordDialogState extends State<NewPasswordDialog> {
 
   void createPassword(BuildContext context) {
     final passwordInfo = new PasswordInfo(passwordNameCon.text,
-        usernameCon.text, emailCon.text, applicationCon.text, urlCon.text);
+        usernameCon.text, '', emailCon.text, applicationCon.text, urlCon.text);
 
     Navigator.pop(context, passwordInfo);
   }
 }
+
+// TODO: Make the form scrollable / into a list allowing for multiple devices to support the app correctly!

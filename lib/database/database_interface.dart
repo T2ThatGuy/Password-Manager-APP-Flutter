@@ -50,7 +50,7 @@ class DatabaseInterface {
 
     for (var i in responseData["data"]) {
       PasswordInfo password = PasswordInfo(i["password_name"], i["username"],
-          i["email"], i["application"], i["url"]);
+          i["password"], i["email"], i["application"], i["url"]);
       passwords.add(password);
     }
 
@@ -68,3 +68,11 @@ final _databaseInterface = DatabaseInterface();
 DatabaseInterface getDatabaseRef() {
   return _databaseInterface;
 }
+
+
+// TODO: Add api support for creating new password!
+// TODO: Add local db support and queue system!
+// TODO: Add support for deleting a password!
+// TODO: Add support for changing / editing a passwords information!
+
+// TODO: Encrypt passwords allowing before sending them off to the database when creating a new password instead of storing them in plane text!

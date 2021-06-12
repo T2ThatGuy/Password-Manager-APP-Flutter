@@ -93,3 +93,7 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 }
+
+
+// TODO: Add availability to click on listtile and copy it to the clipboard!
+// TODO: Add availability to view the details on a password and edit / delete them if necessary!
