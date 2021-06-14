@@ -26,9 +26,7 @@ class _NewPasswordDialogState extends State<NewPasswordDialog> {
       appBar: AppBar(
         title: Text('Create a Password'),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
+      body: ListView(
         children: <Widget>[
           createTextField(
             Icons.person_outline,
