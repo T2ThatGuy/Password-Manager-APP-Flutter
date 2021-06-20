@@ -14,4 +14,8 @@ class User {
   String getToken() {
     return _token;
   }
+
+  String getUsername() {
+    return _username;
+  }
 }

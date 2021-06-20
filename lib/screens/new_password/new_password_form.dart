@@ -146,4 +146,4 @@ class _NewPasswordDialogState extends State<NewPasswordDialog> {
   }
 }
 
-// TODO: Make the form scrollable / into a list allowing for multiple devices to support the app correctly!
+// TODO: COMPLETED! Make the form scrollable / into a list allowing for multiple devices to support the app correctly!

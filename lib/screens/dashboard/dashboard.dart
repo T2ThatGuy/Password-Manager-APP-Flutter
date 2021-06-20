@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:password_manager_app/models/passwordInfo.dart';
 
 import '../new_password/new_password_form.dart';
 import '../../database/database_interface.dart';
@@ -32,8 +34,9 @@ class _DashboardState extends State<Dashboard> {
             child: ListView.builder(
               itemCount: _databaseInterface.cards.length,
               itemBuilder: (context, index) => cardListTile(
-                  _databaseInterface.cards[index].passwordName,
-                  _databaseInterface.cards[index].application),
+                context,
+                _databaseInterface.cards[index],
+              ),
             ),
           ),
         ],
@@ -47,7 +50,7 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Card cardListTile(String title, String application) {
+  Card cardListTile(BuildContext content, PasswordInfo password) {
     return Card(
       margin: EdgeInsets.all(10),
       shape: RoundedRectangleBorder(
@@ -57,19 +60,24 @@ class _DashboardState extends State<Dashboard> {
       ),
       elevation: 8,
       child: ListTile(
-        onTap: () {
-          print(title);
-        },
-        title: Text(title),
-        subtitle: Text(
-          application,
-          style: TextStyle(
-              color:
-                  MediaQuery.of(context).platformBrightness == Brightness.dark
-                      ? Color(0xBBF5FCF9)
-                      : Color(0xFF000000)),
-        ),
-      ),
+          onTap: () {
+            copyToClipboard(content, password.password);
+          },
+          title: Text(password.passwordName),
+          subtitle: Text(
+            password.application,
+            style: TextStyle(
+                color:
+                    MediaQuery.of(context).platformBrightness == Brightness.dark
+                        ? Color(0xBBF5FCF9)
+                        : Color(0xFF000000)),
+          ),
+          trailing: IconButton(
+            icon: Icon(Icons.list),
+            onPressed: () {
+              displayPasswordInfo(context, password);
+            },
+          )),
     );
   }
 
@@ -92,8 +100,62 @@ class _DashboardState extends State<Dashboard> {
       setState(() {});
     }
   }
+
+  void copyToClipboard(BuildContext context, String password) {
+    Clipboard.setData(ClipboardData(text: password));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Password copied to Clipboard')));
+  }
+
+  Future<void> displayPasswordInfo(
+      BuildContext context, PasswordInfo password) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(password.passwordName),
+          content: getPasswordContent(password),
+          actions: <Widget>[
+            TextButton(
+              child: Text('delete'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('edit'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  SingleChildScrollView getPasswordContent(PasswordInfo password) {
+    return SingleChildScrollView(
+      child: ListBody(
+        children: <Widget>[
+          Text('Username: ' + password.username),
+          Text('Password: ' + password.password),
+          Text('Email: ' + password.email),
+          Text('Application: ' + password.application),
+          Text('URL: ' + password.url)
+        ],
+      ),
+    );
+  }
 }
 
 
-// TODO: Add availability to click on listtile and copy it to the clipboard!
-// TODO: Add availability to view the details on a password and edit / delete them if necessary!
+// TODO: COMPLETE! Add availability to click on listtile and copy it to the clipboard!
+// TODO: Add availability to view the details of a password (<= Completed) and edit / delete them if necessary!
+// TODO: Add encryption to copying the password

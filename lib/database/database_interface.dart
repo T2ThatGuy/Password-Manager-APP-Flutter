@@ -56,7 +56,12 @@ class DatabaseInterface {
   }
 
   Future<bool> createNewPassword(PasswordInfo password) async {
+    Map<String, String> _headers = {
+      'Authorization': 'Bearer ' + userInfo.getToken()
+    };
+
     cards.add(password);
+
     return true;
   }
 }
