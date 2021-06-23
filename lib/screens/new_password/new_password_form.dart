@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:password_manager_app/models/passwordInfo.dart';
 
 class NewPasswordDialog extends StatefulWidget {
   @override
@@ -138,11 +137,21 @@ class _NewPasswordDialogState extends State<NewPasswordDialog> {
     );
   }
 
-  void createPassword(BuildContext context) {
-    final passwordInfo = new PasswordInfo(passwordNameCon.text,
-        usernameCon.text, '', emailCon.text, applicationCon.text, urlCon.text);
+  String generatePassword() {
+    return "";
+  }
 
-    Navigator.pop(context, passwordInfo);
+  void createPassword(BuildContext context) {
+    Map<String, String> _data = {
+      'password_name': passwordNameCon.text,
+      'username': usernameCon.text,
+      'password': generatePassword(),
+      'email': emailCon.text,
+      'application': applicationCon.text,
+      'url': urlCon.text
+    };
+
+    Navigator.pop(context, _data);
   }
 }
 

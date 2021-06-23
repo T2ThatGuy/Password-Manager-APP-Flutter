@@ -9,6 +9,10 @@ class DatabaseInterface {
   final userInfo = new User();
   var cards = [];
 
+  Map<String, String> getTokenHeader() {
+    return <String, String>{'Authorization': 'Bearer ' + userInfo.getToken()};
+  }
+
   Future<bool> login(String username, password) async {
     Map<String, String> _headers = {
       'Authorization':
@@ -34,9 +38,7 @@ class DatabaseInterface {
   }
 
   Future<List> getPasswords() async {
-    Map<String, String> _headers = {
-      'Authorization': 'Bearer ' + userInfo.getToken()
-    };
+    Map<String, String> _headers = getTokenHeader();
 
     final response = await http.get(
         Uri.parse('http://192.168.1.151:5000/dashboard/get-passwords'),
@@ -47,22 +49,39 @@ class DatabaseInterface {
     List<PasswordInfo> passwords = [];
 
     for (var i in responseData["data"]) {
-      PasswordInfo password = PasswordInfo(i["password_name"], i["username"],
-          i["password"], i["email"], i["application"], i["url"]);
+      PasswordInfo password = PasswordInfo(i["id"], i["password_name"],
+          i["username"], i["password"], i["email"], i["application"], i["url"]);
       passwords.add(password);
     }
 
     return passwords;
   }
 
-  Future<bool> createNewPassword(PasswordInfo password) async {
-    Map<String, String> _headers = {
-      'Authorization': 'Bearer ' + userInfo.getToken()
-    };
-
-    cards.add(password);
+  Future<bool> createNewPassword(Map<String, String> password) async {
+    Map<String, String> _headers = getTokenHeader();
 
     return true;
+  }
+
+  Future<void> deletePassword(PasswordInfo password) async {
+    Map<String, String> _headers = getTokenHeader();
+    _headers.addAll({'Content-Type': 'application/json;charset=UTF-8'});
+    Map<String, int> _body = {'password_id': password.id};
+    var _url = Uri.parse('http://192.168.1.151:5000/dashboard/del-password');
+
+    final response = await http.delete(
+      _url,
+      headers: _headers,
+      body: json.encode(_body),
+    );
+
+    final responseData = jsonDecode(response.body);
+
+    if (response.statusCode == 404 || response.statusCode == 400) {
+      print(responseData["message"]);
+    }
+
+    cards.remove(password);
   }
 }
 
@@ -75,7 +94,7 @@ DatabaseInterface getDatabaseRef() {
 
 // TODO: Add api support for creating new password!
 // TODO: Add local db support and queue system!
-// TODO: Add support for deleting a password!
+// TODO: COMPLETE! Add support for deleting a password!
 // TODO: Add support for changing / editing a passwords information!
 
 // TODO: Encrypt passwords allowing before sending them off to the database when creating a new password instead of storing them in plane text!

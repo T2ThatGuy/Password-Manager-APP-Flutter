@@ -60,24 +60,26 @@ class _DashboardState extends State<Dashboard> {
       ),
       elevation: 8,
       child: ListTile(
-          onTap: () {
-            copyToClipboard(content, password.password);
+        onTap: () {
+          copyToClipboard(content, password.password);
+        },
+        title: Text(password.passwordName),
+        subtitle: Text(
+          password.application,
+          style: TextStyle(
+              color:
+                  MediaQuery.of(context).platformBrightness == Brightness.dark
+                      ? Color(0xBBF5FCF9)
+                      : Color(0xFF000000)),
+        ),
+        trailing: IconButton(
+          icon: Icon(Icons.list),
+          onPressed: () {
+            displayPasswordInfo(context, password);
+            setState(() {});
           },
-          title: Text(password.passwordName),
-          subtitle: Text(
-            password.application,
-            style: TextStyle(
-                color:
-                    MediaQuery.of(context).platformBrightness == Brightness.dark
-                        ? Color(0xBBF5FCF9)
-                        : Color(0xFF000000)),
-          ),
-          trailing: IconButton(
-            icon: Icon(Icons.list),
-            onPressed: () {
-              displayPasswordInfo(context, password);
-            },
-          )),
+        ),
+      ),
     );
   }
 
@@ -107,8 +109,7 @@ class _DashboardState extends State<Dashboard> {
         .showSnackBar(SnackBar(content: Text('Password copied to Clipboard')));
   }
 
-  Future<void> displayPasswordInfo(
-      BuildContext context, PasswordInfo password) async {
+  void displayPasswordInfo(BuildContext context, PasswordInfo password) async {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -118,7 +119,10 @@ class _DashboardState extends State<Dashboard> {
           actions: <Widget>[
             TextButton(
               child: Text('delete'),
-              onPressed: () {
+              onPressed: () async {
+                await _databaseInterface.deletePassword(password);
+                setState(() {});
+
                 Navigator.of(context).pop();
               },
             ),
