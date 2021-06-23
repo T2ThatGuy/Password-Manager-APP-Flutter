@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../database/database_interface.dart';
+import '../../services/timer.dart';
 
 class LogIn extends StatefulWidget {
   @override
@@ -18,10 +19,10 @@ class _LogInState extends State<LogIn> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: _buildColumn()));
+    return Scaffold(body: Center(child: _buildColumn(context)));
   }
 
-  Column _buildColumn() {
+  Column _buildColumn(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -64,7 +65,9 @@ class _LogInState extends State<LogIn> {
             padding: EdgeInsets.all(2),
             child: ElevatedButton(
               child: Text('LOGIN'),
-              onPressed: performLogIn,
+              onPressed: () {
+                performLogIn(context);
+              },
             ),
           ),
         )
@@ -72,7 +75,7 @@ class _LogInState extends State<LogIn> {
     );
   }
 
-  void performLogIn() async {
+  void performLogIn(BuildContext context) async {
     username = usernameField.text;
     password = passwordField.text;
 
@@ -80,6 +83,7 @@ class _LogInState extends State<LogIn> {
 
     if (response == true) {
       clearInputs();
+      getTimerRef().startTimer(context);
       Navigator.pushNamed(context, '/dashboard');
     } else {
       print('Something went wrong!');
@@ -92,5 +96,7 @@ class _LogInState extends State<LogIn> {
 
     usernameField.text = '';
     passwordField.text = '';
+
+    FocusScope.of(context).unfocus(); //Hides keyboard if it is already up
   }
 }
