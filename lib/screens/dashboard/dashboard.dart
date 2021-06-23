@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:password_manager_app/models/passwordInfo.dart';
+import 'package:password_manager_app/services/encrypt.dart';
 import 'package:password_manager_app/services/timer.dart';
 
 import '../new_password/new_password_form.dart';
@@ -106,7 +107,8 @@ class _DashboardState extends State<Dashboard> {
   }
 
   void copyToClipboard(BuildContext context, String password) {
-    Clipboard.setData(ClipboardData(text: password));
+    Clipboard.setData(
+        ClipboardData(text: getEncryptionRef().decodeThis(password)));
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text('Password copied to Clipboard'),
       backgroundColor: Color(0xFF00BF6D),

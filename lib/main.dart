@@ -20,4 +20,4 @@ class MyApp extends StatelessWidget {
 }
 
 
-// TODO: Auto logout after 10 minutes or when user is required to authenticate themselves for a valid JWT again!
+// TODO: COMPLETE! Auto logout after 10 minutes or when user is required to authenticate themselves for a valid JWT again!

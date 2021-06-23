@@ -5,7 +5,7 @@ class AutoTimer {
   var _timer;
 
   void startTimer(BuildContext context) {
-    const TIMEOUT = Duration(seconds: 10);
+    const TIMEOUT = Duration(minutes: 5);
     const MS = Duration(milliseconds: 1);
 
     Timer startTimeout([int? milliseconds]) {

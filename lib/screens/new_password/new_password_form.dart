@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import '../../services/encrypt.dart';
 
 class NewPasswordDialog extends StatefulWidget {
   @override
@@ -165,7 +166,9 @@ class _NewPasswordDialogState extends State<NewPasswordDialog> {
       },
     ).join('');
 
-    return password;
+    print(password);
+
+    return getEncryptionRef().encryptThis(password);
   }
 
   void createPassword(BuildContext context) {
