@@ -65,7 +65,7 @@ class _DashboardState extends State<Dashboard> {
         },
         title: Text(password.passwordName),
         subtitle: Text(
-          password.application,
+          '${password.username} - ${password.email}',
           style: TextStyle(
               color:
                   MediaQuery.of(context).platformBrightness == Brightness.dark
@@ -98,15 +98,17 @@ class _DashboardState extends State<Dashboard> {
     );
 
     if (information != null) {
-      _databaseInterface.createNewPassword(information);
+      await _databaseInterface.createNewPassword(information);
       setState(() {});
     }
   }
 
   void copyToClipboard(BuildContext context, String password) {
     Clipboard.setData(ClipboardData(text: password));
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('Password copied to Clipboard')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('Password copied to Clipboard'),
+      backgroundColor: Color(0xFF00BF6D),
+    ));
   }
 
   void displayPasswordInfo(BuildContext context, PasswordInfo password) async {
@@ -161,5 +163,6 @@ class _DashboardState extends State<Dashboard> {
 
 
 // TODO: COMPLETE! Add availability to click on listtile and copy it to the clipboard!
-// TODO: Add availability to view the details of a password (<= Completed) and edit / delete them if necessary!
-// TODO: Add encryption to copying the password
+// TODO: COMPLETE! Add availability to view the details of a password and delete them if necessary!
+// TODO: Add availability to edit the passwords information!
+// TODO: Decrypt the passwords before copying

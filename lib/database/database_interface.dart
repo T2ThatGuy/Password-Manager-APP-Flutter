@@ -27,7 +27,7 @@ class DatabaseInterface {
     print(response.statusCode);
 
     if (response.statusCode == 200) {
-      userInfo.setUserInfo(
+      userInfo.setUserInfo(responseData["data"]["id"],
           responseData["data"]["username"], responseData["data"]["token"]);
 
       cards = await getPasswords();
@@ -57,10 +57,32 @@ class DatabaseInterface {
     return passwords;
   }
 
-  Future<bool> createNewPassword(Map<String, String> password) async {
+  Future<void> createNewPassword(Map<String, dynamic> password) async {
     Map<String, String> _headers = getTokenHeader();
+    _headers.addAll({'Content-Type': 'application/json;charset=UTF-8'});
+    Map<String, dynamic> _body = password;
+    _body.addAll(<String, dynamic>{"user_id": userInfo.getUserId()});
+    var _url = Uri.parse('http://192.168.1.151:5000/dashboard/create-password');
 
-    return true;
+    final response = await http.post(
+      _url,
+      headers: _headers,
+      body: json.encode(_body),
+    );
+
+    var responseData = jsonDecode(response.body);
+
+    var newPassword = PasswordInfo(
+      responseData["data"]["id"],
+      responseData["data"]["password_name"],
+      responseData["data"]["username"],
+      responseData["data"]["password"],
+      responseData["data"]["email"],
+      responseData["data"]["application"],
+      responseData["data"]["url"],
+    );
+
+    cards.add(newPassword);
   }
 
   Future<void> deletePassword(PasswordInfo password) async {
@@ -92,7 +114,7 @@ DatabaseInterface getDatabaseRef() {
 }
 
 
-// TODO: Add api support for creating new password!
+// TODO: COMPLETE! Add api support for creating new password!
 // TODO: Add local db support and queue system!
 // TODO: COMPLETE! Add support for deleting a password!
 // TODO: Add support for changing / editing a passwords information!

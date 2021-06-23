@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class NewPasswordDialog extends StatefulWidget {
@@ -15,12 +17,14 @@ class _NewPasswordDialogState extends State<NewPasswordDialog> {
   // Password Creation Options
   var letters = true;
   var numbers = true;
-  var symbols = false;
+  var symbols = true;
 
-  double passwordLength = 10;
+  double passwordLength = 20;
 
   @override
   Widget build(BuildContext context) {
+    generatePassword();
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Create a Password'),
@@ -137,12 +141,35 @@ class _NewPasswordDialogState extends State<NewPasswordDialog> {
     );
   }
 
+  String fetchStringConstant() {
+    const CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const SYMBOLS = '!@#%^&*()_+}|{":?>"' + "'";
+    const NUMBERS = '0123456789';
+
+    String stringConstant = '';
+
+    stringConstant += letters == true ? CHARACTERS : '';
+    stringConstant += numbers == true ? NUMBERS : '';
+    stringConstant += symbols == true ? SYMBOLS : '';
+
+    return stringConstant;
+  }
+
   String generatePassword() {
-    return "";
+    String stringConstant = fetchStringConstant();
+    String password = List.generate(
+      passwordLength.toInt(),
+      (index) {
+        final randomIndex = Random.secure().nextInt(stringConstant.length);
+        return stringConstant[randomIndex];
+      },
+    ).join('');
+
+    return password;
   }
 
   void createPassword(BuildContext context) {
-    Map<String, String> _data = {
+    Map<String, dynamic> _data = {
       'password_name': passwordNameCon.text,
       'username': usernameCon.text,
       'password': generatePassword(),
