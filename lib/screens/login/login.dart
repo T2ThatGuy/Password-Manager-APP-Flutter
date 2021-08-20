@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../database/database_interface.dart';
+import '../../services/database_interface.dart';
 import '../../services/timer.dart';
-
-import '../../services/encrypt.dart';
 
 class LogIn extends StatefulWidget {
   @override
@@ -86,7 +84,6 @@ class _LogInState extends State<LogIn> {
     if (response == true) {
       clearInputs();
       getTimerRef().startTimer(context);
-      getEncryptionRef().generateKey(password);
       Navigator.pushNamed(context, '/dashboard');
     } else {
       print('Something went wrong!');

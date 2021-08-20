@@ -1,6 +1,8 @@
 import 'package:encrypt/encrypt.dart';
 import 'generateKey.dart' as keyCreation;
 
+import 'package:crypt/crypt.dart';
+
 class MyEncryption {
   final iv = IV.fromLength(16);
   var key;
@@ -21,6 +23,22 @@ class MyEncryption {
     final decrypted = encrypter.decrypt(Encrypted.fromBase64(text), iv: iv);
 
     return decrypted;
+  }
+}
+
+class HashService {
+  String generatePasswordHash(String password) {
+    return Crypt.sha256(password).toString();
+  }
+
+  bool checkPasswordHash(String hashedPassword, String password) {
+    final hash = Crypt(hashedPassword);
+
+    if (hash.match(password)) {
+      return true;
+    }
+
+    return false;
   }
 }
 

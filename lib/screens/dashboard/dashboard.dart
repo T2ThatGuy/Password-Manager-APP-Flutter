@@ -5,7 +5,7 @@ import 'package:password_manager_app/services/encrypt.dart';
 import 'package:password_manager_app/services/timer.dart';
 
 import '../new_password/new_password_form.dart';
-import '../../database/database_interface.dart';
+import '../../services/database_interface.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -67,7 +67,7 @@ class _DashboardState extends State<Dashboard> {
         },
         title: Text(password.passwordName),
         subtitle: Text(
-          '${password.username} - ${password.email}',
+          '${password.username}',
           style: TextStyle(
               color:
                   MediaQuery.of(context).platformBrightness == Brightness.dark
@@ -132,12 +132,12 @@ class _DashboardState extends State<Dashboard> {
                 Navigator.of(context).pop();
               },
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('edit'),
-            ),
+            // TextButton(
+            //   onPressed: () {
+            //     Navigator.of(context).pop();
+            //   },
+            //   child: Text('edit'),
+            // ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
@@ -155,7 +155,6 @@ class _DashboardState extends State<Dashboard> {
       child: ListBody(
         children: <Widget>[
           Text('Username: ' + password.username),
-          Text('Password: ' + password.password),
           Text('Email: ' + password.email),
           Text('Application: ' + password.application),
           Text('URL: ' + password.url)
@@ -169,4 +168,4 @@ class _DashboardState extends State<Dashboard> {
 // TODO: COMPLETE! Add availability to click on listtile and copy it to the clipboard!
 // TODO: COMPLETE! Add availability to view the details of a password and delete them if necessary!
 // TODO: Add availability to edit the passwords information!
-// TODO: Decrypt the passwords before copying
+// TODO: COMPLETE! Decrypt the passwords before copying
