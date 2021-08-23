@@ -61,7 +61,7 @@ class FileHandler {
     String path = '$_databasePath/userData.db';
     bool _justCreated = false;
 
-    // await deleteDatabase(path);
+    // await deleteDatabase(path); <--- DEBUG ONLY TO RESET LOCAL DB
 
     _database = await openDatabase(path, version: 1,
         onCreate: (Database db, int version) {
@@ -220,7 +220,7 @@ class FileHandler {
   }
 
   void deletePassword(String passwordId, {bool addQueue = true}) async {
-    int count = await _database
+    await _database
         .rawDelete('DELETE FROM passwords WHERE uid = ?', [passwordId]);
 
     if (addQueue) {
@@ -228,7 +228,7 @@ class FileHandler {
           'DELETE', '/dashboard/del-password', {'password_id': passwordId});
     }
 
-    print('[DELETE] - Password deleted with id: $count');
+    print('[DELETE] - Password deleted with id: $passwordId');
   }
 
   // --- QUEUE SYSTEM --- //

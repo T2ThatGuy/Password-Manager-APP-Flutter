@@ -15,6 +15,8 @@ class APIInterface {
   final mainUrl = 'http://192.168.1.151:5000';
   final userInfo = new User();
 
+  bool userOffline = false;
+
   FileHandler fileHandler = getFileHandler();
 
   var cards = [];
@@ -54,6 +56,7 @@ class APIInterface {
     }
 
     bool reponse = await fileHandler.offlineLogIn(username, password);
+    userOffline = true;
 
     if (reponse == true) {
       cards = await fileHandler.getPasswords();
@@ -86,6 +89,13 @@ class APIInterface {
     Map<String, dynamic> _body = password;
     _body.addAll(<String, dynamic>{"user_id": userInfo.getUserId()});
 
+    if (userOffline) {
+      PasswordInfo newPassword = await fileHandler.createNewPassword(password);
+      cards.add(newPassword);
+
+      return;
+    }
+
     try {
       final response = await http
           .post(Uri.parse('$mainUrl/dashboard/create-password'),
@@ -109,8 +119,10 @@ class APIInterface {
       return;
     } on TimeoutException catch (_) {
       // Catches if the api does not respond on time
+      userOffline = true;
     } on SocketException catch (_) {
       // Catches if no available WiFi connection
+      userOffline = true;
     }
 
     PasswordInfo newPassword = await fileHandler.createNewPassword(password);
@@ -122,6 +134,13 @@ class APIInterface {
     _headers.addAll({'Content-Type': 'application/json;charset=UTF-8'});
 
     Map<String, String> _body = {'password_id': password.uid};
+
+    if (userOffline) {
+      fileHandler.deletePassword(password.uid);
+      cards.remove(password);
+
+      return;
+    }
 
     try {
       final response = await http
@@ -144,8 +163,10 @@ class APIInterface {
       }
     } on TimeoutException catch (_) {
       // Catches if the api does not respond on time
+      userOffline = true;
     } on SocketException catch (_) {
       // Catches if no available WiFi connection
+      userOffline = true;
     }
 
     fileHandler.deletePassword(password.uid);
@@ -168,7 +189,7 @@ class APIInterface {
     _headers.addAll({'Content-Type': 'application/json;charset=UTF-8'});
 
     for (var i in queueList) {
-      print(i);
+      // print(i);
 
       String endpoint = getEncryptionRef().decodeThis(i['endpoint']);
       String arguments = getEncryptionRef().decodeThis(i['arguments']);
@@ -229,8 +250,6 @@ class APIInterface {
             cards.removeWhere((psw) => toRemove.contains(psw));
           }
         }
-
-        return;
       } on TimeoutException catch (_) {
         return;
       } on SocketException catch (_) {

@@ -2,7 +2,7 @@
     package="com.example.password_manager_app">
         <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="Password Manager"
+        android:label="passwordy"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
