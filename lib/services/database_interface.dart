@@ -160,6 +160,10 @@ class APIInterface {
   Future<void> applyQueue(var db) async {
     List<Map> queueList = await fileHandler.getQueue(db);
 
+    if (queueList.length == 0) {
+      return;
+    }
+
     Map<String, String> _headers = getTokenHeader();
     _headers.addAll({'Content-Type': 'application/json;charset=UTF-8'});
 
@@ -170,9 +174,9 @@ class APIInterface {
       String arguments = getEncryptionRef().decodeThis(i['arguments']);
       String method = getEncryptionRef().decodeThis(i['method']);
 
-      print('Method: $method');
-      print('Arguments: $arguments');
-      print('Endpoint: $endpoint');
+      // print('Method: $method');
+      // print('Arguments: $arguments');
+      // print('Endpoint: $endpoint');
 
       try {
         if (method == 'POST') {
@@ -187,7 +191,7 @@ class APIInterface {
           final responseData = jsonDecode(response.body);
 
           if (response.statusCode == 200 || response.statusCode == 202) {
-            fileHandler.removeItemFromQueue(i['id'], db);
+            fileHandler.removeItemFromQueue(i['id']);
 
             fileHandler.addNewPassword(responseData['data']);
             cards.add(PasswordInfo(
@@ -211,7 +215,7 @@ class APIInterface {
           final responseData = jsonDecode(response.body);
 
           if (response.statusCode == 200 || response.statusCode == 202) {
-            fileHandler.removeItemFromQueue(i['id'], db);
+            fileHandler.removeItemFromQueue(i['id']);
 
             fileHandler.deletePassword(responseData['data'], addQueue: false);
 

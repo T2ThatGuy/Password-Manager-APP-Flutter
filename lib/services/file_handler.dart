@@ -31,7 +31,7 @@ class FileHandler {
       List<Map> responseList = await db
           .rawQuery('SELECT * FROM user WHERE username = ?', [username]);
 
-      print(responseList);
+      // print(responseList);
 
       if (!(responseList.length > 0)) {
         return;
@@ -72,19 +72,16 @@ class FileHandler {
         return;
       }
       print('[DATABASE] Database opened again');
-      await syncDatabase(db, username, password, passwords, applyQueue);
     });
+
+    await syncDatabase(_database, username, password, passwords, applyQueue);
   }
 
   Future<void> syncDatabase(Database db, String username, String password,
       List<dynamic> passwords, Function applyQueue) async {
     print('[DATABASE] Syncing database');
 
-    final responseList = await getQueue(db);
-
-    if (responseList.length > 0) {
-      await applyQueue(db);
-    }
+    await applyQueue(db);
 
     await db.execute('DELETE FROM user');
     await db.execute('DELETE FROM passwords');
@@ -251,15 +248,16 @@ class FileHandler {
     });
   }
 
-  void removeItemFromQueue(int queueId, Database db) async {
-    int count = await db.rawDelete('DELETE FROM queue WHERE id = ?', [queueId]);
+  void removeItemFromQueue(int queueId) async {
+    int count =
+        await _database.rawDelete('DELETE FROM queue WHERE id = ?', [queueId]);
 
     print('[DELETE] - Queue item deleted with id: $count');
   }
 
   Future<List<Map>> getQueue(Database db) async {
     List<Map> queueList = await db.rawQuery('SELECT * FROM queue');
-    print("Queue list: $queueList");
+    // print("Queue list: $queueList");
     return queueList;
   }
 }

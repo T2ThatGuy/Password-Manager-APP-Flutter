@@ -86,7 +86,7 @@ class _LogInState extends State<LogIn> {
       getTimerRef().startTimer(context);
       Navigator.pushNamed(context, '/dashboard');
     } else {
-      print('Something went wrong!');
+      print('[ERROR] Something went wrong! Code 101');
     }
   }
 

@@ -24,8 +24,6 @@ class _NewPasswordDialogState extends State<NewPasswordDialog> {
 
   @override
   Widget build(BuildContext context) {
-    generatePassword();
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Create a Password'),
@@ -166,7 +164,7 @@ class _NewPasswordDialogState extends State<NewPasswordDialog> {
       },
     ).join('');
 
-    print(password);
+    // print(password);
 
     return getEncryptionRef().encryptThis(password);
   }
